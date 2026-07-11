@@ -141,21 +141,26 @@ export default function ScrollSequence({ dynamicFrames }: ScrollSequenceProps) {
       }
 
       // Background progressive cache loading for every frame
-      for (let i = 0; i < count; i++) {
-        if (!imgs[i]) {
-          const img = new Image();
-          img.src = getFramePath(env, i);
-          img.onload = () => {
-            if (!cancelled) {
-              imgs[i] = img;
-              // Decode aggressively on load to push decoding to worker threads, preventing main thread stutter
-              if (img.decode) {
-                img.decode().catch(() => {});
+      const startBackgroundLoading = () => {
+        for (let i = 0; i < count; i++) {
+          if (!imgs[i]) {
+            const img = new Image();
+            img.src = getFramePath(env, i);
+            img.onload = () => {
+              if (!cancelled) {
+                imgs[i] = img;
+                // Decode aggressively on load to push decoding to worker threads, preventing main thread stutter
+                if (img.decode) {
+                  img.decode().catch(() => {});
+                }
               }
-            }
-          };
+            };
+          }
         }
-      }
+      };
+
+      // Delay the mass image requests to prevent network queuing and allow gallery images to load instantly
+      setTimeout(startBackgroundLoading, isInitial ? 800 : 2500);
     };
 
     // Aggressively preload all environments to ensure no stutter when switching
