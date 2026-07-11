@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-bg-gradient-top: #412513;
+  --color-bg-gradient-mid: #8f5e3d;
+  --color-sun-glow: #e8c078;
+  --color-rock-shadow: #31270e;
+  --color-text-primary: #ffffff;
+  --color-text-muted: rgba(255, 255, 255, 0.72);
+  --color-panel-glass-bg: rgba(20, 18, 17, 0.6);
+  --color-panel-glass-border: rgba(255, 255, 255, 0.12);
+  --color-btn-border: rgba(255, 255, 255, 0.4);
+
+  --font-serif: var(--font-fraunces), serif;
+  --font-sans: var(--font-inter), sans-serif;
+  --font-display: var(--font-fraunces), serif;
+}
+
+body {
+  background: #000000;
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+}
