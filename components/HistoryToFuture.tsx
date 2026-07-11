@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
+
 
 export default function HistoryToFuture() {
   return (
@@ -57,14 +57,12 @@ export default function HistoryToFuture() {
             <motion.div
               animate={{ y: [0, -24, 0] }}
               transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
-              className="relative w-full h-full"
+              className="relative w-full"
             >
-              <Image
+              <img
                 src="/download (1)-Photoroom.png"
                 alt="Range Rover Classic Heritage"
-                fill
-                sizes="(max-width: 768px) 80vw, 55vw"
-                className="object-contain drop-shadow-2xl"
+                className="w-full h-auto object-contain drop-shadow-2xl"
               />
             </motion.div>
           </motion.div>
@@ -101,14 +99,12 @@ export default function HistoryToFuture() {
             <motion.div
               animate={{ y: [0, -24, 0] }}
               transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-              className="relative w-full h-[60vh] md:h-[90vh]"
+              className="relative w-full"
             >
-              <Image
+              <img
                 src="/download-Photoroom.png"
                 alt="Range Rover Modern Evolution"
-                fill
-                sizes="(max-width: 768px) 80vw, 55vw"
-                className="object-contain drop-shadow-2xl"
+                className="w-full h-auto object-contain drop-shadow-2xl"
               />
             </motion.div>
           </motion.div>
