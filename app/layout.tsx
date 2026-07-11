@@ -30,6 +30,15 @@ export default function RootLayout({
       className={`${fraunces.variable} ${inter.variable} h-full antialiased`}
       suppressHydrationWarning
     >
+      <head>
+        <link 
+          rel="preload" 
+          href="/sequence/forest/ezgif-frame-001.jpg" 
+          as="image" 
+          type="image/jpeg" 
+          fetchPriority="high" 
+        />
+      </head>
       <body className="min-h-full flex flex-col font-sans bg-black text-white">{children}</body>
     </html>
   );
