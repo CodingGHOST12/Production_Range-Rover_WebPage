@@ -62,6 +62,8 @@ export default function HistoryToFuture() {
               <img
                 src="/download (1)-Photoroom.png"
                 alt="Range Rover Classic Heritage"
+                decoding="async"
+                loading="lazy"
                 className="w-full h-auto object-contain drop-shadow-2xl"
               />
             </motion.div>
@@ -104,6 +106,8 @@ export default function HistoryToFuture() {
               <img
                 src="/download-Photoroom.png"
                 alt="Range Rover Modern Evolution"
+                decoding="async"
+                loading="lazy"
                 className="w-full h-auto object-contain drop-shadow-2xl"
               />
             </motion.div>

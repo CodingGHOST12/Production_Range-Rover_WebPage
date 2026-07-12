@@ -82,6 +82,7 @@ export default function EditorialMosaicUI({ images }: EditorialMosaicUIProps) {
                     src={src}
                     alt={`Editorial Gallery Image ${index + 1}`}
                     loading="eager"
+                    decoding="async"
                     fetchPriority={index < 4 ? "high" : "auto"}
                     className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-[1.5s] ease-out"
                   />
