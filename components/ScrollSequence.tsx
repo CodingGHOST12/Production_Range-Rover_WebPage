@@ -140,45 +140,32 @@ export default function ScrollSequence({ dynamicFrames }: ScrollSequenceProps) {
         };
       }
 
-      // Background progressive cache loading using chunking to prevent main-thread freezing (TBT fix)
+      // Background progressive cache loading for every frame
       const startBackgroundLoading = () => {
-        let currentIndex = 0;
-        const chunkSize = 15; // 15 frames per tick yields the thread frequently
-        
-        const loadChunk = () => {
-          if (cancelled) return;
-          const end = Math.min(currentIndex + chunkSize, count);
-          for (let i = currentIndex; i < end; i++) {
-            if (!imgs[i]) {
-              const img = new Image();
-              img.src = getFramePath(env, i);
-              img.onload = () => {
-                if (!cancelled) {
-                  imgs[i] = img;
+        for (let i = 0; i < count; i++) {
+          if (!imgs[i]) {
+            const img = new Image();
+            img.src = getFramePath(env, i);
+            img.onload = () => {
+              if (!cancelled) {
+                imgs[i] = img;
+                // Decode aggressively on load to push decoding to worker threads, preventing main thread stutter
+                if (img.decode) {
+                  img.decode().catch(() => {});
                 }
-              };
-            }
+              }
+            };
           }
-          currentIndex += chunkSize;
-          if (currentIndex < count) {
-            setTimeout(loadChunk, 15);
-          }
-        };
-        
-        loadChunk();
+        }
       };
 
       // Delay the mass image requests to prevent network queuing and allow gallery images to load instantly
       setTimeout(startBackgroundLoading, isInitial ? 800 : 2500);
     };
 
-    // Aggressively preload active environment, fully defer the others to prevent initial main thread spike
+    // Aggressively preload all environments to ensure no stutter when switching
     ENVIRONMENTS.forEach((env, idx) => {
-      if (idx === globalEnvIndex) {
-        loadEnv(env, true);
-      } else {
-        setTimeout(() => loadEnv(env, false), 4000 + (idx * 500));
-      }
+      loadEnv(env, idx === globalEnvIndex);
     });
     
     return () => {
@@ -250,20 +237,14 @@ export default function ScrollSequence({ dynamicFrames }: ScrollSequenceProps) {
       }
     };
 
-    // Cache layout metrics to eliminate forced synchronous layouts (layout thrashing) during scroll
-    let cachedTotal = 0;
-    let cachedTop = 0;
-
-    const updateMetrics = () => {
-      const rect = container.getBoundingClientRect();
-      cachedTop = window.scrollY + rect.top;
-      cachedTotal = container.offsetHeight - window.innerHeight;
-    };
-
-    // Map scroll directly to a 0.0 - 1.0 progress float without forcing layout
+    // Map scroll directly to a 0.0 - 1.0 progress float to completely unify the timeline math
     const onScroll = () => {
-      const scrolled = Math.min(Math.max(window.scrollY - cachedTop, 0), cachedTotal);
-      targetProgressRef.current = cachedTotal > 0 ? scrolled / cachedTotal : 0;
+      const rect = container.getBoundingClientRect();
+      const total = container.offsetHeight - window.innerHeight;
+      const scrolled = Math.min(Math.max(-rect.top, 0), total);
+      
+      // Target progress mapped perfectly 1:1 across all environments (no speed multipliers, no dead zones)
+      targetProgressRef.current = total > 0 ? scrolled / total : 0;
     };
 
     // The core 60 FPS hardware-synced drawing loop
@@ -280,15 +261,11 @@ export default function ScrollSequence({ dynamicFrames }: ScrollSequenceProps) {
       rafRef.current = requestAnimationFrame(renderLoop);
     };
 
-    const onResize = () => {
-      updateMetrics();
-      drawFrames(currentProgressFloatRef.current);
-    };
+    const onResize = () => drawFrames(currentProgressFloatRef.current);
 
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize, { passive: true });
     
-    updateMetrics();
     onScroll();
     // Eagerly sync the float ref on mount to prevent a fast snap
     currentProgressFloatRef.current = targetProgressRef.current;
@@ -339,7 +316,6 @@ export default function ScrollSequence({ dynamicFrames }: ScrollSequenceProps) {
         <img 
           src={getFramePath(ENVIRONMENTS[0], 0)} 
           alt="Range Rover Cinematic" 
-          decoding="async"
           className="w-full h-full block object-cover absolute inset-0 -z-30 brightness-[0.65] contrast-[1.2] saturate-[0.85]" 
         />
         

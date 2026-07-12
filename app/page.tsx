@@ -38,7 +38,6 @@ function getMountainFrames() {
       })
       .map(f => `/sequence/mountain/${f}`);
   } catch (error) {
-    console.error("Error reading mountain frames:", error);
     return [];
   }
 }

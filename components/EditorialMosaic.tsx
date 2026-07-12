@@ -57,16 +57,14 @@ export default function EditorialMosaic() {
               });
             }
           } catch (e) {
-            console.warn(`[EditorialMosaic] Could not read dimensions for ${file}`, e);
+            // Ignore unreadable images silently
           }
         });
         
-      console.log(`[EditorialMosaic] Successfully processed ${imagesData.length} images.`);
     } else {
       return null;
     }
   } catch (error) {
-    console.error(`[EditorialMosaic] ERROR reading directory:`, error);
     return null;
   }
 
