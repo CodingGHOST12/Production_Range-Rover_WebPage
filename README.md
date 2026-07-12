@@ -1,6 +1,6 @@
 # Range Rover Cinematic Web Experience
 
-**Live Demo:** [https://production-range-rover-web-page.vercel.app/](https://production-range-rover-web-page.vercel.app/)
+**Live Demo:** <a href="https://production-range-rover-web-page.vercel.app/" target="_blank">https://production-range-rover-web-page.vercel.app/</a>
 
 A high-performance, fan-made tribute web application showcasing the Range Rover through an immersive, cinematic, scroll-driven experience. Built with Next.js, this project pushes the boundaries of web animation, leveraging hardware-accelerated canvas rendering for buttery-smooth 60FPS video-like scroll sequences.
 
