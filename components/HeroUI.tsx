@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, Variants } from "framer-motion";
+import { m as motion, Variants } from "framer-motion";
 import { Mountain, Activity, Gauge, Zap, Wind, Compass, Sun, Snowflake, Map } from "lucide-react";
 
 const ENVIRONMENTS = ["forest", "desert", "mountain"];

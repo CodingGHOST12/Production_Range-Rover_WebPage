@@ -140,28 +140,45 @@ export default function ScrollSequence({ dynamicFrames }: ScrollSequenceProps) {
         };
       }
 
-      // Background progressive cache loading for every frame
+      // Background progressive cache loading using chunking to prevent main-thread freezing (TBT fix)
       const startBackgroundLoading = () => {
-        for (let i = 0; i < count; i++) {
-          if (!imgs[i]) {
-            const img = new Image();
-            img.src = getFramePath(env, i);
-            img.onload = () => {
-              if (!cancelled) {
-                imgs[i] = img;
-              }
-            };
+        let currentIndex = 0;
+        const chunkSize = 15; // 15 frames per tick yields the thread frequently
+        
+        const loadChunk = () => {
+          if (cancelled) return;
+          const end = Math.min(currentIndex + chunkSize, count);
+          for (let i = currentIndex; i < end; i++) {
+            if (!imgs[i]) {
+              const img = new Image();
+              img.src = getFramePath(env, i);
+              img.onload = () => {
+                if (!cancelled) {
+                  imgs[i] = img;
+                }
+              };
+            }
           }
-        }
+          currentIndex += chunkSize;
+          if (currentIndex < count) {
+            setTimeout(loadChunk, 15);
+          }
+        };
+        
+        loadChunk();
       };
 
       // Delay the mass image requests to prevent network queuing and allow gallery images to load instantly
       setTimeout(startBackgroundLoading, isInitial ? 800 : 2500);
     };
 
-    // Aggressively preload all environments to ensure no stutter when switching
+    // Aggressively preload active environment, fully defer the others to prevent initial main thread spike
     ENVIRONMENTS.forEach((env, idx) => {
-      loadEnv(env, idx === globalEnvIndex);
+      if (idx === globalEnvIndex) {
+        loadEnv(env, true);
+      } else {
+        setTimeout(() => loadEnv(env, false), 4000 + (idx * 500));
+      }
     });
     
     return () => {

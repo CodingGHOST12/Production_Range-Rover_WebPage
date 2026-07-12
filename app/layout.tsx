@@ -19,6 +19,8 @@ export const metadata: Metadata = {
   description: "Crafted for those who expect confidence without compromise.",
 };
 
+import { LazyMotion, domAnimation } from "framer-motion";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -39,7 +41,11 @@ export default function RootLayout({
           fetchPriority="high" 
         />
       </head>
-      <body className="min-h-full flex flex-col font-sans bg-black text-white">{children}</body>
+      <body className="min-h-full flex flex-col font-sans bg-black text-white">
+        <LazyMotion features={domAnimation} strict>
+          {children}
+        </LazyMotion>
+      </body>
     </html>
   );
 }
