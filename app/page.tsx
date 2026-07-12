@@ -1,11 +1,14 @@
 import Navbar from "@/components/Navbar";
 import ScrollSequence from "@/components/ScrollSequence";
 import HeroUI from "@/components/HeroUI";
-import EditorialSection from "@/components/EditorialSection";
-import EditorialMosaic from "@/components/EditorialMosaic";
-import HistoryToFuture from "@/components/HistoryToFuture";
-import FooterTransition from "@/components/FooterTransition";
-import Footer from "@/components/Footer";
+import dynamic from 'next/dynamic';
+
+const EditorialSection = dynamic(() => import('@/components/EditorialSection'));
+const EditorialMosaic = dynamic(() => import('@/components/EditorialMosaic'));
+const HistoryToFuture = dynamic(() => import('@/components/HistoryToFuture'));
+const FooterTransition = dynamic(() => import('@/components/FooterTransition'));
+const Footer = dynamic(() => import('@/components/Footer'));
+
 import FloatingEnvironmentSwitch from "@/components/FloatingEnvironmentSwitch";
 import fs from 'fs';
 import path from 'path';
