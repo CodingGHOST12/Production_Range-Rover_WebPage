@@ -57,7 +57,7 @@ export default function ScrollSequence({ dynamicFrames }: ScrollSequenceProps) {
   const getFrameCount = (env: string) => dynamicFrames?.[env]?.length || FRAME_COUNTS[env];
   const getFramePath = (env: string, index: number) => {
     if (dynamicFrames?.[env]) return dynamicFrames[env][index];
-    return `/sequence/${env}/ezgif-frame-${String(index + 1).padStart(3, "0")}.webp`;
+    return `/sequence/${env}/ezgif-frame-${String(index + 1).padStart(3, "0")}.jpg`;
   };
 
   // Reset scroll position to top on initial page load (F5 refresh fix)

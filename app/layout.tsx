@@ -33,9 +33,9 @@ export default function RootLayout({
       <head>
         <link 
           rel="preload" 
-          href="/sequence/forest/ezgif-frame-001.webp" 
+          href="/sequence/forest/ezgif-frame-001.jpg" 
           as="image" 
-          type="image/webp" 
+          type="image/jpeg" 
           fetchPriority="high" 
         />
       </head>
